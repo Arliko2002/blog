@@ -1,0 +1,21 @@
+@import 'tailwindcss';
+
+@keyframes fade-in {
+	from {
+		opacity: 0;
+		transform: scale(0.95);
+	}
+	to {
+		opacity: 1;
+		transform: scale(1);
+	}
+}
+.animate-fade-in {
+	animation: fade-in 0.3s ease-out;
+}
+.input-field {
+	@apply w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-50;
+}
+.primary-btn {
+	@apply bg-black text-white px-4 py-2 hover:bg-pink-50 hover:text-black transition rounded-xl;
+}

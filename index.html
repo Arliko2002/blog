@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<link rel="icon" type="image/svg+xml" href="/vite.svg" />
+		<link href="/src/style.css" rel="stylesheet" />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
+			rel="stylesheet"
+		/>
+		<link
+			href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&display=swap"
+			rel="stylesheet"
+		/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<script type="module" src="/src/js/main.js"></script>
+		<title>Blog App</title>
+	</head>
+	<body class="text-gray-800 font-['Newsreader']">
+		<div x-data="blogData()" class="mx-auto">
+			<header
+				class="flex justify-between mb-6 bg-white py-6 border-b-1 border-gray-300 w-full px-14"
+			>
+				<div class="flex gap-1.5 items-center">
+					<img src="./src/icons/logo.svg" />
+					<h1
+						class="text-xl sm:text-2xl font-bold font-['Newsreader'] text-black"
+					>
+						My Blog
+					</h1>
+				</div>
+				<img src="./src/icons/photo.svg" />
+			</header>
+			<div class="flex flex-col justify-between container mx-auto gap-4 p-4">
+				<div class="relative w-full">
+					<span
+						class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400"
+					>
+						<img src="./src/icons/search.svg" />
+					</span>
+					<input
+						type="text"
+						x-model="search"
+						placeholder="Поиск..."
+						class="w-full pl-10 pr-4 py-4 rounded-2xl focus:outline-none focus:ring-0 focus:ring-pink-500 focus:border-pink-500 transition placeholder-gray-400 text-gray-800 bg-pink-50"
+					/>
+				</div>
+			</div>
+
+			<div class="px-4 py-4 container mx-auto pb-24">
+				<h1
+					class="text-xl sm:text-2xl font-bold font-['Newsreader'] text-black mb-4"
+				>
+					Posts
+				</h1>
+				<div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+					<template x-for="post in filteredPosts" :key="post.id">
+						<div
+							class="bg-white rounded-xl p-4 shadow-sm hover:shadow-lg transition flex flex-col gap-2"
+						>
+							<h2
+								class="text-lg font-semibold text-gray-900"
+								x-text="post.title"
+							></h2>
+							<p class="text-gray-500 text-sm" x-text="post.description"></p>
+							<div class="flex justify-between text-sm text-gray-700 mt-auto">
+								<p>
+									<strong>Author:</strong>
+									<span x-text="post.author_name"></span>
+								</p>
+								<p>
+									<strong>Дата:</strong> <span x-text="post.created_at"></span>
+								</p>
+							</div>
+							<div class="flex items-center justify-between pt-2">
+								<button
+									@click="post.likes_count++"
+									class="flex gap-4 items-center cursor-pointer"
+								>
+									<img src="./src/icons/like.svg" />
+									<span x-text="post.likes_count"></span>
+								</button>
+								<button
+									@click="deletePost(post.id)"
+									class="text-gray-400 hover:text-red-600 transition w-6 cursor-pointer"
+									title="Удалить"
+								>
+									<img src="./src/icons/bin.svg" />
+								</button>
+							</div>
+						</div>
+					</template>
+				</div>
+			</div>
+			<div class="mx-auto container px-4 py-4 flex justify-center">
+				<div class="fixed bottom-2">
+					<button @click="formOpened = true" class="primary-btn">
+						+ Добавить новый пост
+					</button>
+				</div>
+			</div>
+			<div
+				x-show="formOpened"
+				x-transition
+				class="fixed inset-0 bg-black/75 flex items-center justify-center z-50"
+			>
+				<div class="bg-white p-6 rounded shadow-md w-full max-w-md">
+					<h2 class="text-xl font-semibold mb-4">Добавить пост</h2>
+					<form @submit.prevent="addPost">
+						<div class="mb-4">
+							<label class="block text-sm mb-1">Название</label>
+							<input
+								type="text"
+								x-model="newPost.title"
+								class="input-field"
+								placeholder="Введите название"
+							/>
+							<template x-if="errors.title">
+								<p class="text-red-500 text-sm mt-1" x-text="errors.title"></p>
+							</template>
+						</div>
+
+						<div class="mb-4">
+							<label class="block text-sm mb-1">Описание</label>
+							<textarea
+								x-model="newPost.description"
+								class="input-field"
+							></textarea>
+							<template x-if="errors.description">
+								<p
+									class="text-red-500 text-sm mt-1"
+									x-text="errors.description"
+								></p>
+							</template>
+						</div>
+
+						<div class="mb-4">
+							<label class="block text-sm mb-1">Автор</label>
+							<input
+								type="text"
+								x-model="newPost.author_name"
+								class="input-field"
+							/>
+							<template x-if="errors.author_name">
+								<p
+									class="text-red-500 text-sm mt-1"
+									x-text="errors.author_name"
+								></p>
+							</template>
+						</div>
+						<div class="flex justify-end space-x-2">
+							<button
+								type="button"
+								@click="formOpened = false"
+								class="px-4 py-2 border rounded-xl text-gray-700 hover:bg-gray-100"
+							>
+								Отмена
+							</button>
+							<button type="submit" class="primary-btn">Сохранить</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
